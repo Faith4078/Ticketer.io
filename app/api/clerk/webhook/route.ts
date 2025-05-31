@@ -18,12 +18,14 @@ export async function POST(req: NextRequest) {
       case 'user.created': {
         const { email_addresses, first_name, last_name } = evt.data;
         const emailAddress = email_addresses[0]?.email_address ?? '';
+
         const firstName = first_name ?? '';
         const lastName = last_name ?? '';
+        const name = `${firstName} ${lastName}`.trim();
 
         await fetchMutation(api.mutations.users.createUser, {
           email: emailAddress,
-          name: `${firstName} ${lastName}`.trim(),
+          name,
           userId: id!,
         });
 
@@ -32,13 +34,14 @@ export async function POST(req: NextRequest) {
 
       case 'user.updated': {
         const { email_addresses, first_name, last_name, id } = evt.data;
-        const emailAddress = email_addresses[0]?.email_address ?? '';
         const firstName = first_name ?? '';
         const lastName = last_name ?? '';
+        const name = `${firstName} ${lastName}`.trim();
+        const emailAddress = email_addresses[0]?.email_address ?? '';
 
         await fetchMutation(api.mutations.users.updateUser, {
           email: emailAddress,
-          name: `${firstName} ${lastName}`.trim(),
+          name,
           userId: id,
         });
 
