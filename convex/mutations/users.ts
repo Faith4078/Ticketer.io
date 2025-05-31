@@ -52,6 +52,9 @@ export const deleteUser = mutation({
       .query('users')
       .withIndex('by_user_id', (q) => q.eq('userId', userId))
       .first();
+    if (!existingUser) {
+      throw new Error('user not found');
+    }
 
     await ctx.db.delete(existingUser!._id);
     return existingUser!._id;
