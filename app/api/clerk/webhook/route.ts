@@ -5,9 +5,25 @@ import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
+    // const evt = await verifyWebhook(req, {
+    //   signingSecret: process.env.CLERK_WEBHOOK_SIGNING_SECRET,
+    // });
+
+    const signingSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+    console.log('Signing secret exists:', !!signingSecret);
+    console.log('Signing secret prefix:', signingSecret?.substring(0, 8));
+
+    // Log headers
+    const headers = req.headers;
+    console.log('svix-id:', headers.get('svix-id'));
+    console.log('svix-timestamp:', headers.get('svix-timestamp'));
+    console.log('svix-signature exists:', !!headers.get('svix-signature'));
+
     const evt = await verifyWebhook(req, {
       signingSecret: process.env.CLERK_WEBHOOK_SIGNING_SECRET,
     });
+
+    console.log('Webhook verification successful');
 
     const { id } = evt.data;
     const eventType = evt.type;
